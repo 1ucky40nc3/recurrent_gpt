@@ -64,7 +64,7 @@ class PromptConfig:
         template: A prompt template.
     '''
     input_variables: List[str]
-    template: str
+    template_file_path: str
 
 
 def load_llm_config(path: str) -> LLMConfig:

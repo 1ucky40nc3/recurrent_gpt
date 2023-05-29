@@ -1,4 +1,4 @@
 {
     "input_variables": [],
-    "template": ""
+    "template_file_path": "tests/configs/prompts/default.text"
 }

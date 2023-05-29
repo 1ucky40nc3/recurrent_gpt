@@ -26,17 +26,17 @@ def test_load_llm_config():
 
 def test_prompt_config():
     input_variables = []
-    template = ''
+    template_file_path = ''
     prompt_config = PromptConfig(
         input_variables=input_variables,
-        template=template
+        template_file_path=template_file_path
     )
     assert prompt_config.input_variables == input_variables
-    assert prompt_config.template == template
+    assert prompt_config.template_file_path == template_file_path
 
 
 def test_load_prompt_config():
     path = 'tests/configs/prompts/default.json'
     prompt_config = load_prompt_config(path)
     assert prompt_config.input_variables is not None
-    assert prompt_config.template is not None
+    assert prompt_config.template_file_path is not None
