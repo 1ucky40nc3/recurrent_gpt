@@ -22,7 +22,7 @@ from typing import (
 import json
 from dataclasses import dataclass
 
-import langchain
+from rgpt import llms
 
 
 def load_json(path: str) -> Dict[str, Any]:
@@ -51,7 +51,7 @@ class LLMConfig:
 
     def __post_init__(self) -> None:
         # Check if the type is a langchain integration
-        if type not in dir(langchain.llms):
+        if self.type not in dir(llms):
             raise ValueError(f"Can't a langchain implementation of the LLM type `{self.type}`!")
 
 
