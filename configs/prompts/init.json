@@ -1,8 +1,5 @@
 {
-    "input_variables": [
-        "type",
-        "topic"
-    ],
+    "input_variables": [],
     "partial": {
         "type": "science-fiction",
         "topic": "Aliens"
