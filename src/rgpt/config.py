@@ -61,11 +61,9 @@ class PromptConfig:
     
     Attributes: 
         input_variables: A list of input placeholder variables in the prompt.
-        partial_variables: A list of partial placeholder values in the prompt.
         template: A prompt template.
     '''
     input_variables: List[str]
-    partial_variables: List[str]
     template: str
 
 
