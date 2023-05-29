@@ -1,8 +1,10 @@
 from rgpt.configs import (
     LLMConfig,
     PromptConfig,
+    EmbeddingsConfig,
     load_llm_config,
-    load_prompt_config
+    load_prompt_config,
+    load_embeddings_config
 )
 
 
@@ -40,3 +42,21 @@ def test_load_prompt_config():
     prompt_config = load_prompt_config(path)
     assert prompt_config.input_variables is not None
     assert prompt_config.template_file_path is not None
+
+
+def test_embeddings_config():
+    type = 'HuggingFaceEmbeddings'
+    config = {}
+    embeddings_config = EmbeddingsConfig(
+        type=type,
+        config=config
+    )
+    assert embeddings_config.type == type
+    assert embeddings_config.config == config
+
+
+def test_load_embeddings_config():
+    path = 'tests/configs/embeddings/huggingface.json'
+    embeddings_config = load_embeddings_config(path)
+    assert embeddings_config.type is not None
+    assert embeddings_config.config is not None

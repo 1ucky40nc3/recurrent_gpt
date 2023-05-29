@@ -1,0 +1,6 @@
+{
+    "type": "HuggingFaceEmbeddings",
+    "config": {
+        "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    }
+}

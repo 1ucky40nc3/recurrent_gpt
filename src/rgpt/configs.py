@@ -22,6 +22,8 @@ from typing import (
 import json
 from dataclasses import dataclass
 
+import langchain
+
 from rgpt import llms
 
 
@@ -40,7 +42,7 @@ def load_json(path: str) -> Dict[str, Any]:
 
 @dataclass
 class LLMConfig:
-    '''Large Language Model (LLM) Configuration.
+    '''Large Language Model (LLM) configuration.
     
     Attributes:
         type: The type of langchain LLM integration we want to use.
@@ -52,7 +54,7 @@ class LLMConfig:
     def __post_init__(self) -> None:
         # Check if the type is a langchain integration
         if self.type not in dir(llms):
-            raise ValueError(f"Can't a langchain implementation of the LLM type `{self.type}`!")
+            raise ValueError(f"Can't find implementation of the LLM type `{self.type}`!")
 
 
 @dataclass
@@ -65,6 +67,23 @@ class PromptConfig:
     '''
     input_variables: List[str]
     template_file_path: str
+
+
+@dataclass
+class EmbeddingsConfig:
+    '''Text embeddings model configuration.
+    
+    Attributes:
+        type: The type of langchain text embedding integration we want to use.
+        config: The config we want to instiate the text embedding model with.
+    '''
+    type: str
+    config: Dict[str, Any]
+
+    def __post_init__(self) -> None:
+        # Check if the type is a langchain integration
+        if self.type not in dir(langchain.embeddings):
+            raise ValueError(f"Can't find a langchain implementation of the LLM type `{self.type}`!")    
 
 
 def load_llm_config(path: str) -> LLMConfig:
@@ -91,3 +110,16 @@ def load_prompt_config(path: str) -> PromptConfig:
     '''
     config = load_json(path)
     return PromptConfig(**config)
+
+
+def load_embeddings_config(path: str) -> LLMConfig:
+    '''Load some text embedding model config.
+    
+    Args:
+        path: The path of the config JSON file.
+
+    Returns:
+        The text embedding model config from the config file.
+    '''
+    config = load_json(path)
+    return EmbeddingsConfig(**config)
