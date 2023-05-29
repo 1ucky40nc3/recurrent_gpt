@@ -6,5 +6,6 @@
         "input_long_term_memory",
         "new_character_prompt"
     ],
+    "partial": {},
     "template_file_path": "configs/prompts/default.txt"
 }

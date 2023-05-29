@@ -1,0 +1,7 @@
+{
+    "llm_config_path": "configs/llms/openai.json",
+    "embeddings_config_path": "configs/embeddings/huggingface.json",
+    "prompt_config_path": "configs/prompts/default.json",
+    "init_prompt_config_path": "configs/prompts/init.json"
+    
+}

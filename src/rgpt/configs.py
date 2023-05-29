@@ -63,9 +63,11 @@ class PromptConfig:
     
     Attributes: 
         input_variables: A list of input placeholder variables in the prompt.
+        partial: A mapping for partial variables.
         template: A prompt template.
     '''
     input_variables: List[str]
+    partial: Dict[str, str]
     template_file_path: str
 
 

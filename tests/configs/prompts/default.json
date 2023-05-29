@@ -1,4 +1,11 @@
 {
-    "input_variables": [],
-    "template_file_path": "tests/configs/prompts/default.text"
+    "input_variables": [
+        "short_memory",
+        "input_paragraph",
+        "input_instruction",
+        "input_long_term_memory",
+        "new_character_prompt"
+    ],
+    "partial": {},
+    "template_file_path": "configs/prompts/default.txt"
 }
