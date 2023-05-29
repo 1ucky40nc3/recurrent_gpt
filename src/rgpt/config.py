@@ -62,11 +62,11 @@ class PromptConfig:
     Attributes: 
         input_variables: A list of input placeholder variables in the prompt.
         partial_variables: A list of partial placeholder values in the prompt.
-        prompt: The prompt.
+        template: A prompt template.
     '''
     input_variables: List[str]
     partial_variables: List[str]
-    prompt: str
+    template: str
 
 
 def load_llm_config(path: str) -> LLMConfig:
