@@ -37,12 +37,12 @@ def load_prompt(prompt_config: PromptConfig) -> langchain.PromptTemplate:
     '''
     with open(prompt_config.template_file_path, 'r', encoding='utf-8') as f:
         template = f.read()
-
+    if prompt_config is not None and prompt_config.partial.keys():
+        template = template.format(**prompt_config.partial)
     prompt = langchain.PromptTemplate(
         input_variables=prompt_config.input_variables,
         template=template
     )
-    prompt = prompt.partial(**prompt_config.partial)
     return prompt
 
 
@@ -55,7 +55,7 @@ def load_llm(llm_config: LLMConfig) -> llms.BaseLLM:
     Returns:
         A LLM instance.
     '''
-    cls = getattr(llms, eval(llm_config.type))
+    cls = getattr(llms, llm_config.type)
     return cls(**llm_config.config)
 
 
