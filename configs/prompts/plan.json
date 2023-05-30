@@ -1,0 +1,10 @@
+{
+    "input_variables": [
+        "previous_paragraph",
+        "memory",
+        "writer_new_paragraph",
+        "previous_plans"
+    ],
+    "partial": {},
+    "template_file_path": "configs/prompts/plan.txt"
+}

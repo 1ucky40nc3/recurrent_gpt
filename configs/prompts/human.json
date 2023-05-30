@@ -1,0 +1,10 @@
+{
+    "input_variables": [
+        "previous_paragraph",
+        "memory",
+        "writer_new_paragraph",
+        "user_edited_plan"
+    ],
+    "partial": {},
+    "template_file_path": "configs/prompts/human.txt"
+}
