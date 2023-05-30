@@ -1,0 +1,8 @@
+{
+    "input_variables": [],
+    "partial": {
+        "type": "science-fiction",
+        "topic": "Aliens"
+    },
+    "template_file_path": "tests/configs/prompts/init.txt"
+}

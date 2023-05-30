@@ -7,5 +7,5 @@
         "new_character_prompt"
     ],
     "partial": {},
-    "template_file_path": "configs/prompts/default.txt"
+    "template_file_path": "tests/configs/prompts/default.txt"
 }
