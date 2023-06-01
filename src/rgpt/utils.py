@@ -96,7 +96,7 @@ def safe_format(text: str, **kwargs) -> str:
     return text.format(**{**placeholders, **kwargs})
 
 
-def format_instructions(
+def join_instructions(
     instructions: Iterable[Union[None, str]], 
     format: str = '{index}. {instruction}', 
     link: str = '\n'
