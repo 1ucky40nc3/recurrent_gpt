@@ -6,5 +6,5 @@
         "user_edited_plan"
     ],
     "partial": {},
-    "template_file_path": "configs/prompts/human.txt"
+    "template_file_path": "configs/prompts/actor.txt"
 }
