@@ -52,11 +52,11 @@ def find_substring_after(string: str, prefix: str) -> Optional[str]:
         return None
     
 
-def join_paragraphs(paragraphs: Iterable[Union[None, str]], link: str = '\n') -> str:
-    '''Join a number of paragraphs.
+def join_by_link(texts: Iterable[Union[None, str]], link: str = '\n') -> str:
+    '''Join a number of texts with a link.
     
     Args:
-        paragraphs: A iterable of paragraphs.
+        texts: A iterable of texts.
         link: The string we want to link between strings.
 
     Returns:
@@ -96,28 +96,32 @@ def safe_format(text: str, **kwargs) -> str:
     return text.format(**{**placeholders, **kwargs})
 
 
-def join_instructions(
-    instructions: Iterable[Union[None, str]], 
-    format: str = '{index}. {instruction}', 
+def join_with_format_by_link(
+    texts: Iterable[Union[None, str]], 
+    format: str = '{index}. {text}', 
     link: str = '\n'
 ) -> str:
-    '''Join a number of instructions.
+    '''Join a number of texts by link with format.
     
     Args:
         instructions: A iterable of paragraphs.
-        format: A format string with the '{index}' and '{instruction}' fields.
+        format: A format string with the '{index}' and '{item}' fields.
         link: The string we want to link between strings.
 
     Returns:
         The texts joined with the `link`.
 
     Note:
-        The fields '{index}' and '{instruction}' 
+        The fields '{index}' and '{item}' 
         comes from enumerating over instructions. 
     '''
-    instructions = map(lambda x: x or '', instructions)
+    texts = map(lambda x: x or '', texts)
     formatted = []
-    for index, instruction in enumerate(instructions):
-        instruction = safe_format(format, index=index, instruction=instruction)
-        formatted.append(instruction)
+    for index, text in enumerate(texts):
+        text = safe_format(
+            format, 
+            index=index + 1, 
+            text=text
+        )
+        formatted.append(text)
     return link.join(formatted)
