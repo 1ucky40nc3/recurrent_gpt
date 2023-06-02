@@ -62,7 +62,7 @@ def join_by_link(texts: Iterable[Union[None, str]], link: str = '\n') -> str:
     Returns:
         The texts joined with the `link`.
     '''
-    texts = map(lambda x: x or '', texts)
+    texts = map(lambda x: x.strip() or '', texts)
     return link.join(texts)
 
 
@@ -115,7 +115,7 @@ def join_with_format_by_link(
         The fields '{index}' and '{item}' 
         comes from enumerating over instructions. 
     '''
-    texts = map(lambda x: x or '', texts)
+    texts = map(lambda x: x.strip() or '', texts)
     formatted = []
     for index, text in enumerate(texts):
         text = safe_format(
