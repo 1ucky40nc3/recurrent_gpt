@@ -84,9 +84,9 @@ class ModelResponse:
     output_instruction: Optional[str] = None
 
 
-def is_incomplete(cls: Dataclass) -> bool:
-    return any(
-        value is None
+def is_complete(cls: Dataclass) -> bool:
+    return all(
+        value is not None
         for _, value in cls.__dict__.items()
     )
 
@@ -114,7 +114,11 @@ class RecurrentGPTAgent:
         new_plan_prefix_label: str = 'Revised Plan:',
         num_new_instructions: int = 2,
         input_long_term_memory_format: str = 'Related Paragraphs {index}: {text}',
-        introduce_prompt_config_path: str = DEFAULT_INTRODUCE_PROMPT_CONFIG_PATH
+        introduce_prompt_config_path: str = DEFAULT_INTRODUCE_PROMPT_CONFIG_PATH,
+        output_paragraph_prefix_label: str = 'Output Paragraph:',
+        output_paragraph_suffix_label: str = 'Output Memory',
+        output_memory_prefix_label: str = 'Updated Memory:',
+        output_memory_suffix_label: str = 'Output Instruction:'
     ) -> str:
         self.llm_config_path = llm_config_path
         self.embeddings_config_path = embeddings_config_path
@@ -138,6 +142,10 @@ class RecurrentGPTAgent:
         self.num_new_instructions = num_new_instructions
         self.input_long_term_memory_format = input_long_term_memory_format
         self.introduce_prompt_config_path = introduce_prompt_config_path
+        self.output_paragraph_prefix_label = output_paragraph_prefix_label
+        self.output_paragraph_suffix_label = output_paragraph_suffix_label
+        self.output_memory_prefix_label = output_memory_prefix_label
+        self.output_memory_suffix_label = output_memory_suffix_label
 
         self.llm_config = load_llm_config(self.llm_config_path)
         self.llm = load_llm(self.llm_config)
@@ -233,7 +241,7 @@ class RecurrentGPTAgent:
 
         llm_chain = create_llm_chain(self.actor_prompt_config_path, llm=self.llm)
         actor_reponse = ActorReponse()
-        while is_incomplete(actor_reponse): 
+        while not is_complete(actor_reponse): 
             response = llm_chain.run(
                 previous_paragraph=previous_paragraph,
                 writer_new_paragraph=writer_new_paragraph,
@@ -293,7 +301,7 @@ class RecurrentGPTAgent:
 
         llm_chain = create_llm_chain(self.model_prompt_config_path, llm=self.llm)
         model_response = ModelResponse()
-        while is_incomplete(model_response):
+        while not is_complete(model_response):
             response = llm_chain.run(
                 short_memory=short_memory,
                 input_paragraph=input_paragraph,
@@ -303,8 +311,51 @@ class RecurrentGPTAgent:
             )
             model_response = self.parse_model_response(response)
     
+        self.vectorstore.add_texts([self.model.input_paragraph])
+
+        self.actor.input_paragraph = model_response.input_paragraph
+        self.actor.output_instruction = model_response.output_instruction
+        self.actor.output_memory = model_response.output_memory
+        self.actor.output_paragraph = model_response.output_paragraph
+
     def parse_model_response(self, response: str) -> ModelResponse:
-        pass
+        output_paragraph = find_substring_between(
+            response,
+            self.output_paragraph_prefix_label,
+            self.output_paragraph_suffix_label
+        )
+        output_memory = find_substring_between(
+            response,
+            self.output_memory_prefix_label,
+            self.output_memory_suffix_label
+        )
+        output_instructions = []
+        for i in range(1, self.num_instructions):
+            prefix_label = f'{self.instruction_label} {i}:'
+            suffix_label = f'{self.instruction_label} {i+1}'
+            instruction = find_substring_between(
+                response,
+                prefix_label,
+                suffix_label
+            )
+            output_instructions.append(instruction)
+        instruction = find_substring_after(
+            response,
+            f'{self.instruction_label} {self.num_instructions}:'
+        )
+        lines = list(filter(None, response.split('\n')))
+        instruction = instruction or lines[-1]
+        output_instructions.append(instruction)
+        output_instruction = join_with_format_by_link(
+            output_instructions, 
+            format=self.output_instructions_format
+        )
+        return ModelResponse(
+            input_paragraph=self.model.input_paragraph,
+            output_memory=output_memory,
+            output_paragraph=output_paragraph,
+            output_instruction=output_instruction
+        )
 
 
     def step(self) -> None:
